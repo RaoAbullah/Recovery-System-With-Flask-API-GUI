@@ -23,30 +23,31 @@ This project implements that architecture:
 
 ```mermaid
 flowchart LR
-    subgraph Desktop Client [Tkinter Desktop Application]
-        GUI[Tkinter GUI Window]
-        TREE[Treeview Node Table]
-        LOG_VIEW[Event Log Text Display]
-        GUI --> TREE & LOG_VIEW
+    subgraph Client ["Desktop Client (Tkinter)"]
+        GUI["Tkinter Desktop GUI"]
+        TREE["Treeview Node Table"]
+        LOG_VIEW["Event Log Text Display"]
+        GUI --> TREE
+        GUI --> LOG_VIEW
     end
 
-    subgraph Backend Microservice [Flask REST API Server]
-        ROUTER[Flask REST Router /v2]
-        STATE[In-Memory Recovery Registry]
-        LOGGER[Audit Logger Function]
+    subgraph Backend ["Flask REST API Server"]
+        ROUTER["Flask REST Router (/v2)"]
+        STATE["In-Memory Recovery Registry"]
+        LOGGER["Audit Logger Function"]
         ROUTER <--> STATE
         ROUTER --> LOGGER
     end
 
-    subgraph Storage [Persistent File Storage]
-        FILE[(event_logs.txt)]
+    subgraph Storage ["Persistent File Storage"]
+        FILE[("event_logs.txt")]
         LOGGER --> FILE
     end
 
-    Desktop Client -- HTTP POST /v2/systems --> ROUTER
-    Desktop Client -- HTTP GET /v2/systems --> ROUTER
-    Desktop Client -- HTTP POST /v2/reboot --> ROUTER
-    Desktop Client -- HTTP GET /v2/logs --> ROUTER
+    GUI -->|"POST /v2/systems"| ROUTER
+    GUI -->|"GET /v2/systems"| ROUTER
+    GUI -->|"POST /v2/reboot"| ROUTER
+    GUI -->|"GET /v2/logs"| ROUTER
 ```
 
 ---
